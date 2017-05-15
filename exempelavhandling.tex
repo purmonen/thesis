@@ -1,0 +1,77 @@
+\documentclass[swedish]{kththesis}
+
+% remove this if you are using XeLaTeX or LuaLaTeX
+\usepackage[utf8]{inputenc}
+
+% Use natbib abbreviated bibliography style
+\usepackage[square,numbers]{natbib}
+\bibliographystyle{unsrtnat}
+
+\usepackage{lipsum} % This is just to get some nonsense text in this template, can be safely removed
+
+
+\title{Detta är den svenska titeln}
+\alttitle{This is the English translation of the title}
+\author{Osquar Student}
+\email{osquar@kth.se}
+\supervisor{Lotta Larsson}
+\examiner{Lennart Bladgren}
+\principal{Företaget AB}
+\programme{Civilingenjör Datateknik}
+\school{Skolan för Datavetenskap och Kommunikation}
+\date{\today}
+
+
+\begin{document}
+
+% Försättsblad
+\flyleaf
+
+\begin{abstract}
+  Svensk sammanfattning.
+  \lipsum[1-2]
+\end{abstract}
+
+\clearpage
+
+\begin{otherlanguage}{english}
+  \begin{abstract}
+  English abstract.
+  \lipsum[3-4]
+  \end{abstract}
+\end{otherlanguage}
+
+\cleardoublepage
+
+\tableofcontents
+
+
+% This is where the actual contents of the thesis starts
+\mainmatter
+
+
+\chapter{Introduktion}
+
+Vi använder paketet \emph{natbib} för litteraturreferenser.  Därför
+anropar vi kommandot \texttt{citep} för att få referenser inom
+parentes, så här \citep{heisenberg2015}.  Det är också möjligt att använda
+författarens namn som en del av en mening genom att använda
+\texttt{citet}, om vi t.ex.\ talar om en studie av \citet{einstein2016}.
+
+\lipsum
+
+\section{Frågeställning}
+
+\lipsum[6]
+
+\chapter{Method}
+
+\lipsum
+
+\bibliography{references}
+
+\appendix
+
+\chapter{Onödigt Material som Bilaga}
+
+\end{document}
