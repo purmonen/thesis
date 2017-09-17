@@ -462,7 +462,12 @@ The validation accuracy is not a perfect measurement of game strategy since the 
 
 However, since the state space is so large it is very rare that there are multiple training samples from a specific state making it impossible to estimate a probability distribution in the specific state. Validation accuracy is therefore chosen for pragmatic reasons.
 
-Having no other benchmarks this  is compared to the expected accuracy of randomly selecting moves in each game state calculated as $\frac{1}{n}\sum_i^n\frac{1}{S_{i}}$ where $S_{i}$ is the number of moves available in state $i$.
+Having no other benchmarks this  is compared to the expected accuracy of randomly selecting moves in each game state calculated as shown in equation \ref{eq:random_accuracy} where $S_{i}$ is the number of moves available in state $i$.
+
+\begin{equation}
+\label{eq:random_accuracy}
+\frac{1}{n}\sum_i^n\frac{1}{S_{i}}
+\end{equation}
 
 \section{Candy}
 The experiment on Candy consists of the following steps.
