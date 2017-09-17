@@ -360,8 +360,7 @@ Simplified Candy was implemented in C++ and can be played with or without a GUI.
 We created a deterministic greedy bot that always selects the move which clears the most candies. It will always prefer a five-match to a four-match and a four-match to a three-match. If there are multiple moves that clears equally many candies, it prefers horizontal swaps to vertical swaps  and north-west positions to south-east positions. This makes the bot deterministic and it is possible to calculate what move it will select from any game board. This is important as  the data becomes 100\% predictable which means that a machine learner can get 100\% validation accuracy. When learning from non-deterministic strategy it is not possible and you do not know what the theoretical maximum validation accuracy is.
 
 \subsection{Generate Dataset}
-We generated a dataset from the deterministic greedy bot playing simplified Candy. It has only two feature planes, one for colors and one for valid moves. Each color is encoded $0 \leq c\leq 4$. The valid move feature plane is binary and encodes for each position whether it can be part of  a valid move. If two positions are adjacent and both have a 1 in the valid move feature plane they constitute a valid move.
-\\
+We generated a dataset from the deterministic greedy bot playing simplified Candy. It has only two feature planes, one for colors and one for valid moves. Each color is encoded $0 \leq c\leq 4$. The valid move feature plane is binary and encodes for each position on the game baord whether it can be part of a valid move meaning that the candy residing in that cell can be swapped and become part of a three-match.\\
 
 \begin{figure}[!tbp]
   \centering
@@ -621,6 +620,8 @@ This part shows the performance of the DNN during training. The validation accur
 \caption{Validation accuracies on simplified Candy. Validation top 2 means how often the correct move was one of the top 2 predicted ones, validation top 3 means how often the correct move was one of the top 3 predicted ones.}
 \label{fig:candy_small_validation_accuracy}
 \end{figure}
+
+
 
 \begin{table}
 \caption{Simplified Candy result. Random accuracy is the expected validation accuracy when selecting randomly from the available moves in each game state.}
