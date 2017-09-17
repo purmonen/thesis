@@ -39,7 +39,7 @@
 \flyleaf
 
 \begin{abstract}
-We explored the usage of Monte Carlo tree search (MCTS) and deep learning in order to predict game level difficulty in Candy Crush Saga (Candy) measured as number of attempts per success. A deep neural network (DNN) was trained to predict moves from game states from large amounts of game play data. The DNN played a diverse set of levels in Candy and fitted a model to predict human difficulty from bot difficulty. We compared our results to an MCTS bot. Our results indicate that the DNN can make estimations of game level difficulty comparable to MCTS in shorter time.
+We explored the usage of Monte Carlo tree search (MCTS) and deep learning in order to predict game level difficulty in Candy Crush Saga (Candy) measured as number of attempts per success. A deep neural network (DNN) was trained to predict moves from game states from large amounts of game play data. The DNN played a diverse set of levels in Candy and a regression model was fitted to predict human difficulty from bot difficulty. We compared our results to an MCTS bot. Our results show that the DNN can make estimations of game level difficulty comparable to MCTS in substantially shorter time.
 \end{abstract}
 
 \clearpage
@@ -59,9 +59,9 @@ We explored the usage of Monte Carlo tree search (MCTS) and deep learning in ord
 \mainmatter
 
 \chapter{Introduction}
-Playing games can be fun, but only if the game levels are not too hard nor too easy. Predicting how difficult a game level is before releasing it to players however is difficult. A common method is to let level designers or explicit play testers play a level many times and make a guess. This approach is slow and unreliable.
+Playing games can be fun, but only if the game levels are not too hard nor too easy. If a game is too hard, players become frustrated and stop playing. If a game is too easy, players become bored and stop playing. Predicting how difficult a game level is before releasing it to players however is difficult. In absence of any technical tools a level designer can manually play a level many times and then make a guess of how difficult it will be for players in general given how difficult it was for the level designer. However, playing a game manually takes a lot of time which leads to fewer iterations before release.
 
-It is useful for game companies and level designers to have fast and accurate tools for predicting game level difficulty automatically. It is especially important for games that continuously release new levels such as King's Candy Crush Saga (Candy). It would allow level designers to tweak a level many times before release to ensure that it has an appropriate difficulty. 
+It would be useful for game companies and level designers to have fast and accurate tools for predicting game level difficulty automatically. It is especially important for games that continuously release new levels such as King's Candy Crush Saga (Candy). It would allow level designers to tweak a level many times before release to ensure that it has an appropriate difficulty. 
 
 \section{Bot}
 One automated way of predicting game level difficulty is to create a program, a bot, that plays the game according to some strategy. The bot can play a level many times and estimate how difficult it is for the bot according to a difficulty measurement such as the numbers of attempts per success. If we let the bot play many levels and estimate the bot difficulty for each of those we can compare that to how difficult those levels were for humans and try to relate the bot difficulty with human difficulty.  If it is the case that when a level is comparably hard for a human, it is also comparably hard for the bot, and when it is comparably easy for a human it is comparably easy for the bot, then we might be able to create a useful regression model to predict human difficulty from bot difficulty. The difficulty of new levels can then be predicted by playing it many times with the bot to measure the bot difficulty and then predicting human difficulty from bot difficulty using the prediction model. There are many methods to create a strategy.
