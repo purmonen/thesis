@@ -474,19 +474,18 @@ The experiment on Candy consists of the following steps.
 \begin{enumerate}
 \item Generate dataset from an MCTS bot playing Candy 
 \item Train a DNN
-\item Evaluate performance
 \item Play Candy with different bots using DNN and MCTS
-\item Evaluate performance
-\item Create a model to predict human performance from bot performance
+\item Evaluate performance measured as cumulative success rate and mean success rate
+\item Create a regression model to predict human difficulty from bot difficulty measured as attempts per success
 \end{enumerate}
 
-The first steps are the same as for the first experiment, but then we proceed to use the neural network to actually play the game and measure the bots performance in terms of success rate and create a model to predict human difficulty from bot difficulty measured as attempts per success.
+The first two steps are the same as for the first experiment, we generate training data and then train a neural network but then we proceed to use the neural network to actually play the game and measure the bots performance in terms of success rate and create a model to predict human difficulty from bot difficulty measured as attempts per success.
 
 \subsection{Monte Carlo Tree Search}
 MCTS algorithm used was provided by King. It is written in C++ on top of the Candy source code. The implementation has a few novelties. Instead of only using win or loss as the signal a  continuous signal is used based on partial goals such as the number of jellies cleared and/or the score.  We treat it as a black box that can be configured to use a trained DNN during playouts hence a more detailed description is not necessary but is available in Erik Poromaas master thesis \cite{poromaa2016}.
 
 \subsection{Generate Dataset}
-We let an MCTS bot using 1000 simulations per move play a diverse set of levels between 1000-2000 and added logging of all $(state, action)$ pairs  during game play in a CSV-format directly usable for training a neural network. We gathered close to 2 million data points. 50k data points was used for validation and the rest was used for training.
+We let an MCTS bot using 1000 simulations per move play a diverse set of levels between level 1000 and level 2000 and added logging of all $(state, action)$ pairs  during game play in a CSV-format directly usable for training a neural network. We gathered close to 2 million data points. 50k data points was used for validation and the rest was used for training.
 
 \subsubsection{Data Representation}
 The feature planes are:
