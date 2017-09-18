@@ -14,6 +14,7 @@
 \usepackage[section]{placeins}
 
 \usepackage{tikz}
+\usepackage{pdfpages}
 
 \bibliographystyle{unsrtnat}
 
@@ -34,6 +35,8 @@
 
 
 \begin{document}
+
+\includepdf[pages={1}]{thesis-cover.pdf}
 
 % Title page
 \flyleaf
@@ -770,4 +773,7 @@ We only made quantitative measurements of performance. What kind of moves and st
 
 
 \bibliography{references}
+
+\includepdf[pages={2}]{thesis-cover.pdf}
+
 \end{document}
