@@ -53,6 +53,13 @@ We explored the usage of Monte Carlo tree search (MCTS) and deep learning in ord
   \end{abstract}
 \end{otherlanguage}
 
+\chapter*{Acknowledgements}
+\thispagestyle{empty}
+
+I would like to thank Prof. Karl Meinke at School of Computer Science and Communication (CSC) for supervising my thesis. I would like to thank Stefan Freyr, Erik Poromaa and Alex Nodet from the AI team at King without whom this thesis work would not have been possible. I would also like to thank John Pertoft, Philipp Eisen and Lele Cao from the AI team at King for continuously providing feedback on my work. I would like to thank Prof. Olov Engwall for examining my thesis.
+
+\clearpage
+
 \cleardoublepage
 
 \tableofcontents
@@ -62,7 +69,7 @@ We explored the usage of Monte Carlo tree search (MCTS) and deep learning in ord
 \mainmatter
 
 \chapter{Introduction}
-Playing games can be fun, but only if the game levels are not too hard nor too easy. If a game is too hard, players become frustrated and stop playing. If a game is too easy, players become bored and stop playing. Predicting how difficult a game level is before releasing it to players however is difficult. In absence of any technical tools a level designer can manually play a level many times and then make a guess of how difficult it will be for players in general given how difficult it was for the level designer. However, playing a game manually takes a lot of time which leads to fewer iterations before release.
+Playing games can be fun, but only if the game levels are not too hard nor too easy. If a game is too hard, players become frustrated and stop playing. If a game is too easy, players become bored and stop playing. Predicting how difficult a game level is before releasing it to players is difficult. In absence of any technical tools a level designer can manually play a level many times and then make a guess of how difficult it will be for players in general given how difficult it was for the level designer. However, playing a game manually takes a lot of time which leads to fewer iterations before release.
 
 It would be useful for game companies and level designers to have fast and accurate tools for predicting game level difficulty automatically. It is especially important for games that continuously release new levels such as King's Candy Crush Saga (Candy). It would allow level designers to tweak a level many times before release to ensure that it has an appropriate difficulty. 
 
@@ -111,9 +118,9 @@ In "Crushing Candy Crush" Erik Poromaa predicts game level difficulty in Candy C
 
 In "ImageNet Classification with Deep Convolutional Neural Networks" a large deep convolutional neural network is trained on millions of high-resolution images substantially improving previous state-of-the-art in the ImageNet LSVRC-2010 contest \cite{krizhevsky2012imagenet}. Even though the aim here is to decide what kind of object is visible in an image it is similar to our problem since the game board can be seen as an image with many more channels than 3 as for RGB and the object we are trying to identify is one of the possible 144 moves, therefore a convolutional neural network is suitable for our problem as well. \\
 
-In "Move Evaluation in Go Using Deep Convolutional Neural Networks" a 12-layer deep convolutional neural network  is trained on a dataset of human professional Go players  to predict moves. It predicts professional moves with 55\% accuracy  and could beat traditional search programs without any search \cite{goMoveEvaluation2014}. This paper inspired AlphaGo and is very similar to what we have done in that they create a DNN bot for Go based on only supervised learning, however we take one step further and use the bot the predict game level difficulty.\\
+In "Move Evaluation in Go Using Deep Convolutional Neural Networks" a 12-layer deep convolutional neural network  is trained on a dataset of human professional Go players  to predict moves. It predicts professional moves with 55\% accuracy  and could beat traditional search programs without any search \cite{goMoveEvaluation2014}. This paper inspired AlphaGo and is very similar to what we have done in that they create a DNN bot for Go based on only supervised learning, however we take one step further and use the bot to predict game level difficulty.\\
 
-In "Predicting moves in chess using convolutional neural networks" a deep convolutional neural network is trained to predict moves from game states in chess. The problem with chess is that a move is defined by the position a piece is moved from and the position it is moved so there are 64*64 or 4096 different moves that a classifier needs to distinguish between. In order to reduce the number of moves they used a novel approach of creating two separate networks, one which predicts which piece to move and one which predicts where to move it thus reducing the class space to 64 for each network. They managed to predict which piece to move with 38.3\% accuracy \cite{oshripredicting}. Their aim to predict moves is the same as ours except we did not need to be creative in order to reduce the class space as the number of moves in our problem is 144 which is tractable, in Go there are 361 moves. \\
+In "Predicting moves in chess using convolutional neural networks" a deep convolutional neural network is trained to predict moves from game states in chess. The problem with chess is that a move is defined by the position a piece is moved from and the position it is moved to so there are 64*64 or 4096 different moves that a classifier needs to distinguish between. In order to reduce the number of moves they used a novel approach of creating two separate networks, one which predicts which piece to move and one which predicts where to move it thus reducing the class space to 64 for each network. They managed to predict which piece to move with 38.3\% accuracy \cite{oshripredicting}. Their aim to predict moves is the same as ours except we did not need to be creative in order to reduce the class space as the number of moves in our problem is 144 which is tractable, in Go there are 361 moves. \\
 
 In "Playing Atari with Deep Reinforcement Learning" a  model based on convolutional neural networks and reinforcement learning was created to play seven Atari 2600 games. It outperformed all previous approaches on six of the games  and  performs better than a human expert on three of them \cite{mnih2013playing}. A similar reinforcement method would be interesting to apply on our problem but we decided to go for supervised learning instead because we think the best way to predict game level difficulty would be to create a bot that mimics human players. We could not do that since we did not have human play data at the time this thesis was written but could do that in the future. \\
 
@@ -168,7 +175,7 @@ This is the way we will think of classification in this thesis. It is a way to g
 \label{fig:ann}
 \end{figure}
 
-A neural network is a supervised learning algorithm. We will discuss how it is used for the task of classification. A neural network consists of layers  of neurons connected to each other with weights. We will discuss feed-forward neural networks where neurons at layer $i+1$ are only connected to neurons at layer $i$, as shown in Fig \ref{fig:ann}. Neural networks where neurons have backward connections are called recurrent neural networks and are useful in speech recognition where time is important.  Artificial neurons are loosely modeled after biological  neurons inside the brain. However, we will  think of them as mathematical units since the connection to biology does not ease the understanding of  how they work unless one has a background in biology.
+A neural network is a supervised learning algorithm. We will discuss how it is used for the task of classification. A neural network consists of layers  of neurons connected to each other with weights. We will discuss feed-forward neural networks where neurons at layer $i$ are only connected to neurons at layer $i+1$, as shown in Fig \ref{fig:ann}. Neural networks where neurons have backward connections are called recurrent neural networks and are useful in speech recognition where time is important.  Artificial neurons are loosely modeled after biological  neurons inside the brain. However, we will  think of them as mathematical units since the connection to biology does not ease the understanding of  how they work unless one has a background in biology.
 
 \subsubsection{From Input to Output}
 A neural network used for classification takes an input vector $X \in \mathbb{R}^{n}$ and outputs a vector $Y \in \mathbb{R}^{c}$ representing a probability distribution over the possible classes, as described in Section \ref{sec:machine_learning:data_representation}. What is different between a neural network and other classifiers is how it does it. That is what we will discuss next. 
@@ -262,7 +269,7 @@ w_i= w_i-\lambda\frac{\partial{C}}{\partial{w_i}}
 \end{equation}
 
 \subsubsection{Hyper Parameters}
-When a neural network is trained it learns what weights it should have. Parameters that affect the training such as how the network architecture but are not learned during training are called hyperparameters. A neural network has a lot of hyperparameters.
+When a neural network is trained it learns what weights it should have. Parameters that affect the training such as the network architecture but are not learned during training are called hyperparameters. A neural network has a lot of hyperparameters.
 \begin{itemize}
 \item Learning rate
 \item Number of hidden layers
@@ -348,10 +355,10 @@ When the  thesis started we did not yet have training data available from Candy 
 \item Evaluate classification performance
 \end{enumerate}
 
-Since we do not have any human difficulty data for simplified Candy we do not attempt at predicting difficulty for this experiment. We only explore the classification task.
+Since we do not have any human difficulty data for simplified Candy we do not attempt to predict difficulty for this experiment. We only explore the classification task.
 
 \subsection{Simplified Candy}
-Simplified Candy was implemented in C++ and can be played with or without a GUI. It can be seen in Fig. \ref{fig:candy_small}. It has a slightly smaller game board of $8\times8$ compared to the real game which has $9\times9$. It has 5 different candy colors instead of 6. It has no special candies or blockers. It has no objectives. The game automatically stops after a 60 seconds and the score increases  proportionally to the number of candies cleared. New candies are generated randomly from a uniform distribution. 
+Simplified Candy was implemented in C++ and can be played with or without a GUI. It can be seen in Fig \ref{fig:candy_small}. It has a slightly smaller game board of $8\times8$ compared to the real game which has $9\times9$. It has 5 different candy colors instead of 6. It has no special candies or blockers. It has no objectives. The game automatically stops after a 60 seconds and the score increases  proportionally to the number of candies cleared. New candies are generated randomly from a uniform distribution. 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{images/candy_small.png}
@@ -363,7 +370,7 @@ Simplified Candy was implemented in C++ and can be played with or without a GUI.
 We created a deterministic greedy bot that always selects the move which clears the most candies. It will always prefer a five-match to a four-match and a four-match to a three-match. If there are multiple moves that clears equally many candies, it prefers horizontal swaps to vertical swaps  and north-west positions to south-east positions. This makes the bot deterministic and it is possible to calculate what move it will select from any game board. This is important as  the data becomes 100\% predictable which means that a machine learner can get 100\% validation accuracy. When learning from non-deterministic strategy it is not possible and you do not know what the theoretical maximum validation accuracy is.
 
 \subsection{Generate Dataset}
-We generated a dataset from the deterministic greedy bot playing simplified Candy. It has only two feature planes, one for colors and one for valid moves. Each color is encoded $0 \leq c\leq 4$. The valid move feature plane is binary and encodes for each position on the game baord whether it can be part of a valid move meaning that the candy residing in that cell can be swapped and become part of a three-match.\\
+We generated a dataset from the deterministic greedy bot playing simplified Candy. It has only two feature planes, one for colors and one for valid moves. Each color is encoded $0 \leq c\leq 4$. The valid move feature plane is binary and encodes for each position on the game board whether it can be part of a valid move meaning that the candy residing in that cell can be swapped and become part of a three-match.\\
 
 \begin{figure}[!tbp]
   \centering
@@ -560,7 +567,7 @@ There are a few other drawbacks with the dataset.  The biggest one is that there
 \end{figure}
 
 \subsection{DNN Architecture}
-We used the same DNN as for Simple candy.
+We used the same DNN as for simple Candy.
 
 \subsection{Using DNN}
 The DNN was used through an HTTP server written in Python because we deemed it to cumbersome to embed it inside the MCTS C++ source code using the immature TensorFlow C++ API. Having the HTTP server running on the same physical machine as the bot made the networking overhead  insignificant.
@@ -583,12 +590,12 @@ The MCTS + Random  bot uses MCTS with random playouts. It serves as a baseline f
 The MCTS + DNN bot uses MCTS with DNN during playouts where the highest probable move according to the DNN was selected.
 
 \subsection{Prediction Models}
-We played 361 levels with the bots to calculate the bot difficulty measured as attempts per success. We let each bot play make 100 attempts on each level except for the DNN which we allowed to make 1000 attempts because it is much faster. Player data was available for those levels so we could also calculate human attempts per success. Bot difficulty is not the same as human difficulty but they are correlated. We fit a regression model to predict human attempts per success from bots attempts per success. We use mean absolute error as a measure of predictive accuracy which intuitively means how wrong the predictions were on average.
+We played 361 levels with the bots to calculate the bot difficulty measured as attempts per success. We let each bot make 100 attempts on each level except for the DNN which we allowed to make 1000 attempts because it is much faster. Player data was available for those levels so we could also calculate human attempts per success. Bot difficulty is not the same as human difficulty but they are correlated. We fit a regression model to predict human attempts per success from bots attempts per success. We use mean absolute error as a measure of predictive accuracy which intuitively means how wrong the predictions were on average.
 
 We divide the levels into three groups, green, yellow and red depending on how hard they are for each because we saw that the relationship between human attempts per success and bot attempts per success differed for easier levels and harder levels. We fit a separate prediction model for each group for each bot. The green levels have an attempts per success lower than or equal to a preselected cutoff. The yellow levels  have a higher attempts per success than the cutoff. Red levels have zero successes so attempts per success is undefined. We used the mean of human attempts per success as predicted value for red levels.
 
 \section{Software}
-We used the deep learning library TensorFlow to implement the DNN. Google created TensorFlow to replace DistBelief which is widely used within Google \cite{abadi2016tensorflow}. TensorFlow is written in C++ with an API available in Python. It is not as fast as other deep learning libraries available such as Torch and Theano \cite{bahrampour2015comparative}, but comes with many helpful tools. TensorBoard is a web interface that visualizes training. When creating a TensorFlow graph it is possible to add nodes for logging measurements such as validation accuracy, cross entropy and learning rate. TensorBoard can display the logged measurements in graphs  dynamically created during training as seen in Fig. \ref{fig:tensorboard}. 
+We used the deep learning library TensorFlow to implement the DNN. Google created TensorFlow to replace DistBelief which is widely used within Google \cite{abadi2016tensorflow}. TensorFlow is written in C++ with an API available in Python. It is not as fast as other deep learning libraries available such as Torch and Theano \cite{bahrampour2015comparative}, but comes with many helpful tools. TensorBoard is a web interface that visualizes training. When creating a TensorFlow graph it is possible to add nodes for logging measurements such as validation accuracy, cross entropy and learning rate. TensorBoard can display the logged measurements in graphs  dynamically created during training as seen in Fig \ref{fig:tensorboard}. 
 
 \begin{figure}
 \centering
@@ -671,7 +678,7 @@ Duration & 7 days \\
 \end{table}
 
 \section{Bot Performance}
-We compare the strength of the bots using mean success rate on all levels shown in Table \ref{tab:success_rate}. In Fig \ref{fig:cumulative_sr} the cumulative success rate over levels is shown, the higher the better.
+We compare the strength of the bots using cumulative success rate on all levels shown in Fig \ref{fig:cumulative_sr}, the higher the better.
 
 \begin{figure}[!htb]
 \centering
@@ -680,21 +687,6 @@ We compare the strength of the bots using mean success rate on all levels shown 
 \label{fig:cumulative_sr}
 \end{figure}
 
-\begin{table}
-\caption{Success rate for each method}
-\centering
-\begin{tabular}{l{c}r}
-\hline\hline
-Method & Mean & Standard deviation \\
-\hline
-MCTS + Random & 0.212663 & 0.226270 \\
-MCTS + DNN & 0.229924 & 0.230549 \\
-Random & 0.010199 & 0.066933 \\
-DNN & 0.014281 & 0.046330 \\
-\hline
-\end{tabular}
-\label{tab:success_rate}
-\end{table}
 
 \section{Difficulty Predictions}
 Table \ref{tab:prediction_accuracy} shows the mean absolute errors on 361 levels for each bots. It shows how well the model could predict human difficulty from the bots difficulty. 
@@ -717,16 +709,16 @@ DNN & 1000 & 2.85  & 3.85 \\
  
 \chapter{Discussion}
 \section{DNN Training}
-The validation accuracy on the simplified dataset is high and reaches 92.2\% as seen in Fig. \ref{fig:candy_small_validation_accuracy}. Given more data, more training time and a bigger model  it would likely be able to become even better. Perhaps close to 100\%.
+The validation accuracy on the simplified dataset is high and reaches 92.2\% as seen in Fig \ref{fig:candy_small_validation_accuracy}. Given more data, more training time and a bigger model  it would likely be able to become even better. Perhaps close to 100\%.
 
-The validation accuracy on the MCTS data is much lower at 28.3\% as seen in Fig. \ref{fig:candy_real_validation_accuracy}. This is not surprising as  it is generated from a non-deterministic algorithm. 28.3\% is still a lot higher than 16.3\% which random guessing would give. Given that we do not know how predictable the MCTS data is it is hard to know how good our network has been on learning it. It could be that 30\% is the theoretical maximum validation accuracy, in which case 28.3\% is good, or it could be much higher, in which case 28.3\% might be pretty bad. 
+The validation accuracy on the MCTS data is much lower at 28.3\% as seen in Fig \ref{fig:candy_real_validation_accuracy}. This is not surprising as  it is generated from a non-deterministic algorithm. 28.3\% is still a lot higher than 16.3\% which random guessing would give. Given that we do not know how predictable the MCTS data is it is hard to know how good our network has been on learning it. It could be that 30\% is the theoretical maximum validation accuracy, in which case 28.3\% is good, or it could be much higher, in which case 28.3\% might be pretty bad. 
 
 The training accuracy jumps up and down a lot in the  graphs. That is because  it is calculated on a small randomly selected batch  of 128 datapoints. The training accuracy appears to be close to the validation accuracy for both datasets. This  implies that the neural network has not overfitted which suggests that there is room for increasing the model size. We would have done that but ran out of time.  During the thesis work we continuously collected  more data and the DNN overfitted until the last dataset which was  large enough to make it not overfit. 
 
 Looking at validation, validation top-2 and validation top-3 accuracies we note that the DNN trained on MCTS data improves from 28.3\% to 44.4\% to 57.3\%. This implies that even when it fails to select the correct move the correct move is often in the top-3. Considering that there are many situations in Candy where multiple moves appear to be equally good it is not surprising if it is hard to distinguish between them. 
 
 \section{MCTS}
-Playing without any search, DNN outperforms random and it improves MCTS when used during playouts as can be seen in Fig. \ref{fig:cumulative_sr}. This demonstrates  that the DNN has learned useful knowledge of the game from the data. It is interesting to note how much worse pure DNN performs compared to pure MCTS as others have succeeded in making DNNs as strong as MCTS in Go. The results in Go have been achieved with expert moves while we used data from an MCTS bot weaker than expert players. One of the problems with the training data is that it does not include the goals of the game. For this reason alone it is going to be difficult to perform well without any search. The improvement between using search or no search is much greater than the improvement between using the DNN or not. The gains from using DNN must outweigh the fact that it takes a lot of work to train it and that it will need to be continuously retrained when new features are added to the game in order for it to be worth continued usage in the future.
+Playing without any search, DNN outperforms random and it improves MCTS when used during playouts as can be seen in Fig \ref{fig:cumulative_sr}. This demonstrates  that the DNN has learned useful knowledge of the game from the data. It is interesting to note how much worse pure DNN performs compared to pure MCTS as others have succeeded in making DNNs as strong as MCTS in Go. The results in Go have been achieved with expert moves while we used data from an MCTS bot weaker than expert players. One of the problems with the training data is that it does not include the goals of the game. For this reason alone it is going to be difficult to perform well without any search. The improvement between using search or no search is much greater than the improvement between using the DNN or not. The gains from using DNN must outweigh the fact that it takes a lot of work to train it and that it will need to be continuously retrained when new features are added to the game in order for it to be worth continued usage in the future.
 
 \section{Predicting Human Difficulty}
 The most surprising result is that even though the DNN is much weaker than MCTS it is about as good or better at predicting human difficulty when it is allowed to make 1000 attempts per level instead of 100 as can be seen in Table \ref{tab:prediction_accuracy}. When the DNN only makes 100 attempts per level it is the worst predictor. Since the DNN is much faster than MCTS this means that comparable estimations of human difficulty can be obtained in minutes instead of hours. This can change the level designers work flow  giving them a much faster feedback loop making more tweaks possible before release.
@@ -765,7 +757,7 @@ The data we used excluded important information such as the goal of the level. I
 We initially intended to use real user data for this thesis. We spent a lot of time collecting  it for Candy Crush Soda Saga which required adding code to the code base and getting it released.  It was however aborted as there were problems replaying the games outside of our control. It would be interesting to continue this experiment and train on expert players and see what that does for performance.
 
 \subsubsection{Reinforcement Learning}
-In this thesis we only attempted to make the neural network learn how someone else plays, in this case a MCTS bot. The performance metric being minimized is how well the neural network can predict how someone else would play. It could be interesting to change the aim to play as good as possible. Using reinforcement learning the DNN weights could be altered after having been trained on a dataset to maximize its performance. Play a level, see how well it performed, update the weights in order to make it play better the next time. 
+In this thesis we only attempted to make the neural network learn how someone else plays, in this case an MCTS bot. The performance metric being minimized is how well the neural network can predict how someone else would play. It could be interesting to change the aim to play as good as possible. Using reinforcement learning the DNN weights could be altered after having been trained on a dataset to maximize its performance. Play a level, see how well it performed, update the weights in order to make it play better the next time. 
 
 \subsubsection{Qualitative Exploration of Learning}
 We only made quantitative measurements of performance. What kind of moves and strategies does the neural network learn? We have no idea, we only know that it gets a certain validation accuracy and that it gets a certain success rate in a game. Exploring what kind of moves  it learns and does not learn could perhaps give some interesting insights.
