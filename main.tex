@@ -622,73 +622,58 @@ The game play ran on virtual machines with unknown specifications.
 \chapter{Results}
 
 \section{Training Neural Networks}
-This part shows the performance of the DNN during training. The validation accuracy shows how the DNN is expected to perform on unseen data. We also included how often the correct move was in the top 2 and top 3.
+This part shows the performance of the DNN during training. The validation accuracy shows how the DNN is expected to perform on unseen data. We also include how often the correct move was in the top 2 and top 3. The end result of training and details of datasets used is shown in \ref{tab:training}. Plots of validation accuracies during training is shown in \ref{fig:candy_small_validation_accuracy} and \ref{fig:candy_real_validation_accuracy}.
 
-The validation accuracy on the simplified dataset is high and reaches 92.2\% as seen in Fig \ref{fig:candy_small_validation_accuracy}. Given more data, more training time and a bigger model  it would likely be able to become even better. Perhaps close to 100\%.
+The validation accuracy on the simplified dataset is high and reaches 92.2\% as seen in Table \ref{tab:training}. Given more data, more training time and a bigger model  it would likely be able to become even better. Perhaps close to 100\%.
 
-The validation accuracy on the MCTS data is much lower at 28.3\% as seen in Fig \ref{fig:candy_real_validation_accuracy}. This is not surprising as  it is generated from a non-deterministic algorithm. 28.3\% is still a lot higher than 16.3\% which random guessing would give. Given that we do not know how predictable the MCTS data is it is hard to know how good our network has been on learning it. It could be that 30\% is the theoretical maximum validation accuracy, in which case 28.3\% is good, or it could be much higher, in which case 28.3\% might be pretty bad. 
+The validation accuracy on the MCTS data is much lower at 28.3\%. This is not surprising as  it is generated from a non-deterministic algorithm. 28.3\% is still a lot higher than 16.3\% which random guessing would give. Given that we do not know how predictable the MCTS data is it is hard to know how good our network has been on learning it. It could be that 30\% is the theoretical maximum validation accuracy, in which case 28.3\% is good, or it could be much higher, in which case 28.3\% might be pretty bad. In order to get an understanding of how well the DNN has learned to play like MCTS we need to play the game with the DNN and compare its performance with MCTS. We do that in the next section.
 
-The training accuracy jumps up and down a lot in the  graphs. That is because  it is calculated on a small randomly selected batch  of 128 datapoints. The training accuracy appears to be close to the validation accuracy for both datasets. This  implies that the neural network has not overfitted which suggests that there is room for increasing the model size. We would have done that but ran out of time.  During the thesis work we continuously collected  more data and the DNN overfitted until the last dataset which was  large enough to make it not overfit. 
+The training accuracy jumps up and down a lot in the  graphs. That is because  it is calculated on a small randomly selected batch of 128 datapoints. The training accuracy appears to be close to the validation accuracy for both datasets. This  implies that the neural network has not overfitted which suggests that there is room for increasing the model size. We would have done that but ran out of time. During the thesis work we continuously collected  more data and the DNN overfitted until the last dataset which was  large enough to make it not overfit. 
 
 Looking at validation, validation top-2 and validation top-3 accuracies we note that the DNN trained on MCTS data improves from 28.3\% to 44.4\% to 57.3\%. This implies that even when it fails to select the correct move the correct move is often in the top-3. Considering that there are many situations in Candy where multiple moves appear to be equally good it is not surprising if it is hard to distinguish between them. 
 
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=\textwidth]{images/candy_small_validation.png}
-\caption{Validation accuracies on simplified Candy. Validation top 2 means how often the correct move was one of the top 2 predicted ones, validation top 3 means how often the correct move was one of the top 3 predicted ones.}
+\caption{Validation accuracies on simplified Candy. Validation top 2 means how often the correct move was one of the top 2 predicted ones, validation top 3 means how often the correct move was one of the top 3 predicted ones. Training accuracy was calculated on a mini-batch of 128 data points.}
 \label{fig:candy_small_validation_accuracy}
 \end{figure}
-
-
-
-\begin{table}
-\caption{Simplified Candy result. Random accuracy is the expected validation accuracy when selecting randomly from the available moves in each game state.}
-\centering
-\begin{tabular}{ l | r }
-\hline
-Training size & 450 176\\
-Validation size & 26 000\\
-Average number of moves per state & 23.2 \\
-Random accuracy & 4.9\% \\
-Validation accuracy & 92.2\% \\
-Validation top-2 accuracy & 98.3\% \\
-Validation top-3 accuracy & 99.4\% \\
-Training accuracy & 98.9\% \\
-Iterations & 18k \\
-Duration & 69h \\
-\hline
-\end{tabular}
-\end{table}
 
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=\textwidth]{images/real_validation.png}
-\caption{Validation accuracies on Candy. Validation top 2 means how often the correct move was one of the top 2 predicted ones, validation top 3 means how often the correct move was one of the top 3 predicted ones.}\label{fig:candy_real_validation_accuracy}
+\caption{Validation accuracies on Candy. Validation top 2 means how often the correct move was one of the top 2 predicted ones, validation top 3 means how often the correct move was one of the top 3 predicted ones. Training accuracy was calculated on a mini-batch of 128 data points.}
+\label{fig:candy_real_validation_accuracy}
 \end{figure}
 
 \begin{table}
-\caption{Real data}
+\caption{Neural network training results for Simplified Candy and Candy. Random accuracy is the expected validation accuracy when selecting randomly from the available moves in each game state. Training accuracy was calculated on a small mini-batch of the training data. Validation top-2  accuracy and validation top-3 accuracy mean how often the correct move was in the top-2 and top-3 of the predicted moves.}
 \centering
-\begin{tabular}{ l | r }
+\begin{tabular}{ l {c} r }
 \hline
-Training size & 1 594 714\\
-Validation size & 50 000\\
-Average number of moves per state & 13.4 \\
-Random accuracy & 16.7\% \\
-Validation accuracy & 28.3\% \\
-Validation top-2 accuracy & 44.4\% \\
-Validation top-3 accuracy & 57.3\% \\
-Training accuracy & 30.4\% \\
-Iterations & 1 000 000 \\
-Duration & 7 days \\
+& Simplified Candy & Candy\\
+\hline
+Training size & 450 176 & 1 594 714\\
+Validation size & 26 000 & 50 000\\
+Average number of moves per state & 23.2 & 13.4\\
+Random accuracy & 4.9\% & 16.7\% \\
+Validation accuracy & 92.2\% & 28.3\%\\
+Validation top-2 accuracy & 98.3\% & 44.4\% \\
+Validation top-3 accuracy & 99.4\% & 57.3\% \\
+Training accuracy & 98.9\% & 30.4\%\\
+Iterations & 18 000 & 1 000 000\\
+Duration & 3 days & 7 days \\
 \hline
 \end{tabular}
+\label{tab:training}
 \end{table}
+
+
 
 \section{Bot Performance}
 We compare the strength of the bots using cumulative success rate on all levels shown in Fig \ref{fig:cumulative_sr}, the higher the better.
 
-Playing without any search, DNN outperforms random and it improves MCTS when used during playouts as can be seen in Fig \ref{fig:cumulative_sr}. This demonstrates  that the DNN has learned useful knowledge of the game from the data. It is interesting to note how much worse pure DNN performs compared to pure MCTS as others have succeeded in making DNNs as strong as MCTS in Go. The results in Go have been achieved with expert moves while we used data from an MCTS bot weaker than expert players. One of the problems with the training data is that it does not include the goals of the game. For this reason alone it is going to be difficult to perform well without any search. The improvement between using search or no search is much greater than the improvement between using the DNN or not. The gains from using DNN must outweigh the fact that it takes a lot of work to train it and that it will need to be continuously retrained when new features are added to the game in order for it to be worth continued usage in the future.
+Playing without any search, DNN outperforms random and it improves MCTS when used during playouts as can be seen in Fig \ref{fig:cumulative_sr}. This demonstrates  that the DNN has learned useful knowledge of the game from the data. It is interesting to note how much worse pure DNN performs compared to pure MCTS as others have succeeded in making DNNs as strong as MCTS in Go. The results in Go have been achieved with expert moves while we used data from an MCTS bot weaker than expert players. One of the problems with the training data is that it does not include the goals of the game. For this reason alone it is going to be difficult to perform well without any search. The improvement between using search or no search is much greater than the improvement between using the DNN or not.
 
 \begin{figure}[!htb]
 \centering
@@ -701,7 +686,8 @@ Playing without any search, DNN outperforms random and it improves MCTS when use
 \section{Difficulty Predictions}
 Table \ref{tab:prediction_accuracy} shows the mean absolute errors on 361 levels for each bots. It shows how well the model could predict human difficulty from the bots difficulty. 
 
-The most surprising result is that even though the DNN is much weaker than MCTS it is about as good or better at predicting human difficulty when it is allowed to make 1000 attempts per level instead of 100 as can be seen in Table \ref{tab:prediction_accuracy}. When the DNN only makes 100 attempts per level it is the worst predictor. Since the DNN is much faster than MCTS this means that comparable estimations of human difficulty can be obtained in minutes instead of hours. This can change the level designers work flow  giving them a much faster feedback loop making more tweaks possible before release.
+The most surprising result is that even though the DNN is much weaker than MCTS it is about as good or better at predicting human difficulty when it is allowed to make 1000 attempts per level instead of 100 as can be seen in Table \ref{tab:prediction_accuracy}. When the DNN only makes 100 attempts per level it is the worst predictor. Since the DNN is much faster than MCTS it can make 1000 attempts in much shorter time than MCTS makes 100 attempts. 
+
 
 \begin{table}
 \caption{Accuracy of predicted attempts per success for each bot}
@@ -723,8 +709,14 @@ DNN & 1000 & 2.85  & 3.85 \\
 
 \chapter{Discussion \& Conclusions}
 
+\section{Practical Usefulness}
+The fact that the DNN can make comparable difficulty predictions to MCTS if it is allowed to make 1000 attempts instead of 100 attempts is a practically useful result. It means that comparable estimations of human difficulty can be obtained in minutes instead of hours. This can change the level designers work flow  giving them a much faster feedback loop making more tweaks possible before release.
+
 \section{Method Applicability Outside Candy Crush Saga}
 The method we used to predict game level difficulty in Candy Crush Saga should be applicable to other games as well. The game need to have a finite action space so it can be interpreted as a classification problem and since we only looked at the current game state to select a move, move selection must only depend on the current game state and not the previous ones. At King we have applied the same method in two other games as well but those were very similar to Candy Crush Saga. The method is most useful for games that release new levels frequently.
+
+\section{Deep Neural Network and Monte Carlo tree search comparison}
+The main advantage the DNN approach has is speed, comparable difficulty predictions can be made in much shorter time. Another benefit with the DNN is that it could be trained on human game play data making it play more like a human could lead to more accurate predictions. The main disadvantage with the DNN is that it requires game play data and retraining. For every new game a game state representation must be created and data collected. The DNN must be retrained whenever new game elements are added to the game and new data collected in order to remain accurate. MCTS does not require any knowledge of the game board and therefore the same algorithm can be applied to new games without modification.
 
 \section{Ethics of Artificial Intelligence}
 There are two main concerns of Artificial Intelligence (AI). The threat of super intelligence and the economic impact of automation.
@@ -737,15 +729,6 @@ AI capable of replacing human labor  at cheaper prices will cause unemployment, 
 
 \subsubsection{Environmental Impact}
 The method described need computational power and storage on cloud servers but having a computer program play a level in a few seconds should have a much smaller environmental impact than having a human being playing it in a few minutes so we argue that successfully replacing manual play testers with an automated solution is good for the environment.
-
-\section{Conclusions}
-
-We investigated using a bot based on a DNN playing the game Candy Crush Saga in order to predict game level difficulty and compared it to a bot based on MCTS. We trained the DNN on data generated by the MCTS bot. The DNN bot is much weaker than the MCTS bot but it could be used to make predictions of human difficulty comparable to the MCTS bot in much shorter time. The DNN can also be used to make the MCTS bot even stronger by using it during playouts instead of random playouts but the predictions of human difficulty made from it were not more accurate. The three most important conclusions are:
-\begin{itemize}
-\item  MCTS is much stronger than DNN
-\item  DNN can make MCTS even stronger if used during playouts
-\item DNN can make comparable predictions of human difficulty in substantially shorter time
-\end{itemize}
 
 
 \section{Future Work}
@@ -764,7 +747,14 @@ In this thesis we only attempted to make the neural network learn how someone el
 \subsubsection{Qualitative Exploration of Learning}
 We only made quantitative measurements of performance. What kind of moves and strategies does the neural network learn? We have no idea, we only know that it gets a certain validation accuracy and that it gets a certain success rate in a game. Exploring what kind of moves  it learns and does not learn could perhaps give some interesting insights.
 
+\section{Conclusions}
 
+We investigated using a bot based on a DNN playing the game Candy Crush Saga in order to predict game level difficulty and compared it to a bot based on MCTS. We trained the DNN on data generated by the MCTS bot. The DNN bot is much weaker than the MCTS bot but it could be used to make predictions of human difficulty comparable to the MCTS bot in much shorter time. The DNN can also be used to make the MCTS bot even stronger by using it during playouts instead of random playouts but the predictions of human difficulty made from it were not more accurate. The three most important conclusions are:
+\begin{itemize}
+\item  MCTS is much stronger than DNN
+\item  DNN can make MCTS even stronger if used during playouts
+\item DNN can make comparable predictions of human difficulty in substantially shorter time
+\end{itemize}
 
 \bibliography{references}
 
